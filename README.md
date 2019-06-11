@@ -118,3 +118,102 @@ function getGreeting(user) {
    );
    ReactDom.render(element, doucment)
  }
+setInterval(tick,1000);
+# react只更新它需要更新的部分
+！reactdom将会将元素和它的子元素与他们之前的状态进行比较，并且只会进行必要的更新来使得dom达到预期的状态
+尽管每一秒我们都会新建一个ui树元素，但是他实际只改变了内容
+# 组件&props
+组件允许你将ui拆分为独立的可服用代码片段，并且对每个片段进行独立的构思
+！组件，从概念上类似于javascript函数。他接受任意的入参（‘props’）
+并且返回用于描述页面展示内容的react元素?
+函数组件和class组件
+  定义组件最简单的方式就是编写javascript函数
+  function welcome(props) {
+    return <h1>hello,{props.name}</h1>
+  }
+  该函数被称作‘函数组件’
+  同时还可以使用es6的 class来定义组件
+  class welcome etends React.Component {
+    render （） {
+  return <h1>hello,{this.props.name}</h1>
+  以上等效
+  渲染组件
+  之前我们遇到的React元素都是dom标签，但是react元素也可以用户自定义的组件：
+  const element = <Welcome name="Sara"/>;
+  当react元素为用户自定义组件时，它会将jsx所接收的属性转化成单个对象传递给组件
+  }
+  }
+  当react元素为用户自定义组件时，它会将jsx所接收的属性转化为单个对象传递给组件，这个对象被称之为‘props’
+  例如：
+  function welcome （props）{
+  return <h1>hello,{props.name}</h1>;
+  }
+  function App() {
+    return (
+     <div>
+       <welcome name="sara" />
+       <welcome name="cindy" />
+       <welcome name="add" />
+      </div>
+  )
+  }
+  ReactDom.render(
+  <App />,
+  doucument.getElementById('root')
+  );
+  # 提取组件
+  将组件拆分成更小的组件
+  function comment（props）{
+    return (
+   <div className="comment">
+     <div className="userInfo">
+       <img className="Avatar"
+            src={props.author.avatarUrl}
+            alt={props.author.name}/>
+       <div className="userInfo-name">
+         {props.author.name}
+       </div>
+     </div>
+     <div className="Comment-date">
+       {props.text}
+     </div>
+     <div className="Comment-date">
+       {formatDate(props.date)}
+     </div>
+   </div>
+  )
+  <div> 
+  </div>
+  ）
+  }
+  这里进行化简
+  function Avatar(props) {
+    return (
+      <img className="Avatar" 
+           src={props.user.avatarUrl}
+           alt={props.user.name}/>
+    );
+  }
+  function userInfo（props）{
+    return （
+      <div class="UserInfo">
+        <Avatar user="props.user"/>
+        <div className="UserInfo-name">
+          {props.user.name}
+        </div>
+  </div>
+    ）;
+  }
+  function comment（props） {
+    return (
+      <div className="comment">
+        <userInfo user={props.author}/>
+         <div className="Comment-date">
+           {props.text}
+         </div>
+         <div className="Comment-date">
+           {formatDate(props.date)}
+         </div>
+        </div>
+    );
+  }
