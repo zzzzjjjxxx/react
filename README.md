@@ -217,3 +217,7 @@ setInterval(tick,1000);
         </div>
     );
   }
+# props的只读性
+  组件无论是函数声明还是class声明，都不能改变自身的props
+  #state和生命周期
+  
