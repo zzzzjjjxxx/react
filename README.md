@@ -295,4 +295,3 @@ setInterval(tick,1000);
  而是应该
  this.setState({comment: 'hello'});构造函数是唯一可以给this.state赋值的地方
  # 
-  
