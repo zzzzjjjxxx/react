@@ -224,4 +224,75 @@ setInterval(tick,1000);
 我们要封装真正可复用的clock组件。它将设置自己的计时器并每秒更新一次
 封装时钟的外观开始：
 ！我们需要使得组件自我更新，就需要state，state和props类似，但是state是私有的，并且完全受控于当前组件？
- 
+# 将函数组件转化成class组件
+下面将通过下面五步将clock的函数组件转化成class组件：
+1.创建一个同名的es6class，并且继承react.Component
+2.添加一个空的render（）
+3.将函数移动到render（）方法之中
+4.在render（）方法中用this.props替换props
+5.删除剩余的空函数声明
+  class clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>hello!,{this.props.date.toLocaleTimeString}</h1>
+      </div>
+    )
+  }
+  }
+  现在在clock组件被定义为class，而不是函数
+  每次组件更新时，render方法都会被调用，但是只要在相同dom节点中渲染<Clock/>,就仅有一个Clock组件的class实例被创建使用。这就使得我们可以使用
+  如state或生命周期方法等很多其他特性
+  # 向class组件中添加局部的state
+  我们可以通过以下三步将date从props移动到state中：
+  1.把render（）方法中的this.props.date替换成this.state.date
+  2.添加一个class构造函数，然后在函数中为this.state赋处置
+  class Clock extends React.Component {
+    constructor(props){
+    super(props); // 通过以下的方式将props传递到父类构造函数中，class组件始终用props参数来调用父类的构造函数
+    this.state= {date：new Date()};
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>it is{this.state.date.toLocaleTimeString()}</h1>
+      </div>
+    );
+  }
+  }
+  }
+  ReactDom.render(
+    <Clock/>,
+    document.getElementById('root')
+  );
+  3.这是移除了clock里面的date
+  # 将生命周期方法添加到class中
+ 在许多组件的应用程序中，当组件被销毁时释放所占有的资源是非常重要的。
+ 当clock组件第一次被渲染到dom的时候，就为他设置一个计时器，这在react中被称为挂载（mount）
+ 同时，当dom中clock组件被删除的时候，应该清除计时器。（umount）
+ 我们可以为class组件声明一些特殊的方法，当组件挂载或卸载的时候就就会执行这些方法
+ 在class里面添加
+ compinentDidMount(){}
+ componentWilUnmount() {}
+ !声明周期方法
+ componentDidMount()方法会在组件已经被渲染到dom中后运行，所以最好在这里设置计时器：
+ componentDidMount() {
+   this.thimerID = setInterval(() => this.tick(),1000);
+ }
+ componentWillUnmont() {
+   clearInterval(this.timerID);
+ }
+ !因为this.props和this.state是React本身设置的，且拥有特殊的含义，但是你可以向class中随意添加不参与数据流的额外字段
+ last，我们会使用this.serState()来时刻更新组件state：
+ tick() {
+   this.setState({
+     date: new Date()
+   });
+ }
+ # 不要直接修改state
+ 直接this.state.comment ='hello';
+ 而是应该
+ this.setState({comment: 'hello'});构造函数是唯一可以给this.state赋值的地方
+ # 
+  
